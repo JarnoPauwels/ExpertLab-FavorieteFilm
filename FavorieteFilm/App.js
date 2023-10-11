@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { Dimensions } from 'react-native';
 import axios from 'axios';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import MovieList from './MovieList';
+import WatchList from './WatchList';
 import Menu from './Menu';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import the icon library
+import MovieDetails from './MovieDetails';
+import Icon from 'react-native-vector-icons/Ionicons'; 
+
+const Stack = createStackNavigator();
 
 const App = () => {
   const [randomMovies, setRandomMovies] = useState([]);
@@ -12,6 +19,8 @@ const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navigation = useNavigation();
 
   // Function to fetch random movies from TMDb API
   const fetchRandomMovies = async () => {
@@ -68,25 +77,18 @@ const App = () => {
   // Toggle menu function
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    // Implement your menu opening/closing logic here
   };
 
-  const goToWatchlist = () => {
-    // Implement navigation logic to Watchlist
-    // You can use React Navigation or your preferred navigation library.
-  };
-
-  // Function to navigate to Watched
-  const goToWatched = () => {
-    // Implement navigation logic to Watched
-    // You can use React Navigation or your preferred navigation library.
+  const goToMovieDetails = (movie) => {
+    navigation.navigate('MovieDetails', { movie });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} scrollEnabled={isMenuOpen} nestedScrollEnabled={isMenuOpen}>
       <View style={styles.header}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1}}>
           <SearchBar
+            // style={styles.shadow}
             placeholder="Search for movies..."
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
@@ -106,14 +108,12 @@ const App = () => {
         <Menu
           isVisible={isMenuOpen}
           onClose={toggleMenu}
-          onGoToWatchlist={goToWatchlist}
-          onGoToWatched={goToWatched}
         />
       )}
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <MovieList data={movies} />
+        <MovieList data={movies} onMoviePress={goToMovieDetails} />
       )}
     </SafeAreaView>
   );
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+    marginBottom: 10,
   },
   searchBarContainer: {
     backgroundColor: 'transparent', 
@@ -140,13 +141,14 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent'
   },
   searchBarInputContainer: {
-    backgroundColor: 'black', 
+    shadowColor: 'white',
+    shadowOffset: {width: 2.5, height: 3},
+    shadowOpacity: 0.3,
+    shadowRadius: 30,
+    elevation: 5, 
+    backgroundColor : "black",
     borderBottomColor: 'transparent', 
     borderTopColor: 'transparent', 
-    shadowColor: 'rgba(10, 10, 10, 3)',
-    shadowOffset: {width: 2.5, height: 3},
-    shadowOpacity: 1,
-    shadowRadius: 0,
     borderRadius: 20, 
     height: 40 
   },
@@ -155,4 +157,31 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default () => {
+  return (
+    <NavigationContainer theme={{ colors: { background: 'rgba(0, 3, 20, 8)' } }}>
+      <Stack.Navigator 
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: 'rgba(0, 3, 20, 8)', 
+            borderBottomColor: 'rgba(20, 20, 20, 3)',
+            borderBottomWidth: 2,
+            // position: 'absolute',
+            // top: Dimensions.get('window').height - 60,
+            // left: 0,
+            // right: 0,
+          },
+          headerTintColor: 'white', 
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        >
+        <Stack.Screen name="Home" component={App} options={{ headerShown: false, ...TransitionPresets.FadeFromBottomAndroid }}/>
+        <Stack.Screen name="MovieDetails" component={MovieDetails} options={{ ...TransitionPresets.FadeFromBottomAndroid }}/>
+        <Stack.Screen name="WatchList" component={WatchList} options={{ ...TransitionPresets.FadeFromBottomAndroid }}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
