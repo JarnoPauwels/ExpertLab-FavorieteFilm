@@ -1,55 +1,44 @@
-// import React, { useState } from 'react';
-// import { View, TouchableOpacity } from 'react-native';
-// import Icon from 'react-native-vector-icons/Ionicons';
-
-// const Menu = () => {
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-//   const toggleMenu = () => {
-//     setIsMenuOpen(!isMenuOpen);
-//     // Implement your menu opening/closing logic here
-//   };
-
-//   return (
-//     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
-//       <TouchableOpacity onPress={toggleMenu}>
-//         <Icon name={isMenuOpen ? 'close-outline' : 'menu-outline'} size={30} color="black" />
-//       </TouchableOpacity>
-//       {/* Other content in the header */}
-//     </View>
-//   );
-// };
-
-// export default Menu;
-
-// Menu.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ViewComponent, ScrollView } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons/faList'
+import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
+import { useNavigation } from '@react-navigation/native';
 
-const Menu = ({ isVisible, onClose, onGoToWatchlist, onGoToWatched }) => {
+const Menu = ({ isVisible, onClose, onGoToWatchlist, onGoToWatched}) => {
   if (!isVisible) {
-    return null; // Don't render anything if not visible
+    return null; 
   }
+  const navigation = useNavigation();
+  const navigateToWatchlist = () => {
+    navigation.navigate('WatchList');
+    onClose();
+  };
 
   return (
-    <View style={styles.menu}>
-      <TouchableOpacity onPress={onGoToWatchlist} style={styles.menuItem}>
-        <Text style={styles.menuText}>Go to Watchlist</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={onGoToWatched} style={styles.menuItem}>
-        <Text style={styles.menuText}>Go to Watched</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-        <Text>Close</Text>
-      </TouchableOpacity> */}
-    </View>
+    <ScrollView style={styles.menu} scrollEnabled={false}>
+      <View style={styles.menuContainer}>
+      <View style={styles.menuItemContainer}>
+        <TouchableOpacity onPress={navigateToWatchlist} style={styles.menuItem}>
+          <Text style={styles.menuText}>Watchlist</Text>
+          <FontAwesomeIcon icon={faList} style={styles.menuText}/>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.menuItemContainer}>
+        <TouchableOpacity onPress={onGoToWatched} style={styles.menuItem}>
+          <Text style={styles.menuText}>Profile</Text>
+          <FontAwesomeIcon icon={faUser} style={styles.menuText}/>
+        </TouchableOpacity>
+      </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   menu: {
     position: 'absolute',
-    top: 110, // Adjust the top position as needed
+    top: 115, // Adjust the top position as needed
     left: 0, // Adjust the right position as needed
     width: '100%', // Adjust the width as needed
     height: '100%', // Adjust the width as needed
@@ -58,19 +47,28 @@ const styles = StyleSheet.create({
     padding: 10,
     zIndex: 1, // Ensure the menu is above other content
   },
+  menuContainer: {
+    marginTop: 30,
+  },
+  menuItemContainer: {
+    borderBottomColor: 'rgba(20, 20, 20, 3)',
+    borderBottomWidth: 2,
+    marginBottom: 30, // Adjust Distance Between Items
+    width: '70%',
+    left: '15%',
+  },
   menuItem: {
-    padding: 10,
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    // borderBottomColor: 'rgba(10, 10, 10, 3)',
-    borderBottomColor: 'white',
-    // color: 'white',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginBottom: 5, // Adjust Distance Between Border And Item
   },
   menuText: {
     color: 'white',
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    padding: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
