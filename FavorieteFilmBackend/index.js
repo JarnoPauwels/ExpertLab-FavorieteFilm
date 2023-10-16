@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -9,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use(cors());
 
 // GET endpoint to fetch the watchlist
 app.get('/watchlist', async (req, res) => {
@@ -41,6 +43,7 @@ app.post('/watchlist', async (req, res) => {
             movie_id: req.body.movie_id,
             title: req.body.title,
             description: req.body.description,
+            poster: req.body.poster,
             watched: false,
         }
 
@@ -59,7 +62,7 @@ app.post('/watchlist', async (req, res) => {
             const insertResult = await colli.insertOne(newMovie);
             res.status(200).send({
                 status: "Successfull",
-                message: "Movie added",
+                message: "Movie added to watchlist",
                 data: insertResult
             })  
         }
