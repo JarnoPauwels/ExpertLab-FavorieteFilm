@@ -34,6 +34,7 @@ const App = () => {
         }
       );
       setRandomMovies(response.data.results);
+      console.log(response.data.results)
     } catch (error) {
       console.error('Error fetching random movies:', error);
     }
