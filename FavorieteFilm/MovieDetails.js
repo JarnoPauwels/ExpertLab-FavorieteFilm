@@ -1,6 +1,8 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-// import { withNavigation } from 'react-navigation'; 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+import axios from 'axios';
 
 const MovieDetails = ({ route, navigation }) => {
   const { movie } = route.params;
@@ -11,12 +13,34 @@ const MovieDetails = ({ route, navigation }) => {
     });
   }, [navigation, movie.title]);
 
+  const handlePostRequest = async () => {
+    try {
+      const apiUrl = 'http://localhost:3000/watchlist';
+
+      const postData = {
+        movie_id: movie.id,
+        title: movie.original_title,
+        description: movie.overview,
+        poster: movie.poster_path,
+      };
+
+      const response = await axios.post(apiUrl, postData);
+
+      console.log('POST request successful:', response.data);
+    } catch (error) {
+      console.error('Error making POST request:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{movie.title}</Text>
-      {/* <TouchableOpacity onPress={}>
-        <Text style={styles.overview}>Add to Watchlist</Text>
-      </TouchableOpacity> */}
+      <View style={styles.addContainer}>        
+        <TouchableOpacity onPress={handlePostRequest} style={styles.addButtonContainer}>
+          <FontAwesomeIcon icon={faPlus} style={styles.addIcon}/>
+          <Text style={styles.addText}>Add to Watchlist</Text>
+        </TouchableOpacity>
+      </View>
       <Image
             source={{
               uri: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
@@ -32,7 +56,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: 'rgba(0, 3, 20, 8)',
+    backgroundColor: 'rgb(28, 33, 39)',
+  },
+  addContainer: {
+    flexDirection: 'row',
+    // alignItems: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  addButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  addText: {
+    color: 'rgba(164,166,168,1)',
+    fontSize: 18,
+    paddingLeft: 5,
+  },
+  addIcon: {
+    color: 'rgba(164,166,168,1)',
+    fontSize: 25,
   },
   title: {
     color: 'white',
