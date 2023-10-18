@@ -1,11 +1,15 @@
-import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useLayoutEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
 import axios from 'axios';
 
 const MovieDetails = ({ route, navigation }) => {
   const { movie } = route.params;
+  const [isCheckVisible, setIsCheckVisible] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,6 +31,7 @@ const MovieDetails = ({ route, navigation }) => {
       const response = await axios.post(apiUrl, postData);
 
       console.log('POST request successful:', response.data);
+      setIsAdded(true);
     } catch (error) {
       console.error('Error making POST request:', error);
     }
@@ -37,8 +42,17 @@ const MovieDetails = ({ route, navigation }) => {
       <Text style={styles.title}>{movie.title}</Text>
       <View style={styles.addContainer}>        
         <TouchableOpacity onPress={handlePostRequest} style={styles.addButtonContainer}>
-          <FontAwesomeIcon icon={faPlus} style={styles.addIcon}/>
-          <Text style={styles.addText}>Add to Watchlist</Text>
+          {isAdded ? (
+            <>
+              <FontAwesomeIcon icon={faCheck} style={styles.addIcon} />
+              <Text style={styles.addText}>Added</Text>
+            </>
+          ) : (
+            <>
+              <FontAwesomeIcon icon={faPlus} style={styles.addIcon} />
+              <Text style={styles.addText}>Add to Watchlist</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
       <Image
@@ -46,7 +60,7 @@ const MovieDetails = ({ route, navigation }) => {
               uri: `https://image.tmdb.org/t/p/original${movie.poster_path}`,
             }}
             style={styles.poster}
-        />
+            />
       <Text style={styles.overview}>{movie.overview}</Text>
     </View>
   );
@@ -84,6 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   overview: {
+    marginTop: 8,
     color: 'white',
     fontSize: 16,
   },
