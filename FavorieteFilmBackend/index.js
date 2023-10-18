@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectID} = require('mongodb');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
@@ -12,11 +12,17 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(cors());
 
+client.connect()
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Failed to connect to MongoDB:', error);
+  });
+
 // GET endpoint to fetch the watchlist
 app.get('/watchlist', async (req, res) => {
     try {
-        await client.connect();
-
         const colli = client.db('expertlab').collection('watchlist');
         const pll = await colli.find({}).toArray();
 
@@ -28,15 +34,12 @@ app.get('/watchlist', async (req, res) => {
             error: 'Something went wrong',
             value: error
         });
-    } finally {
-        await client.close();
     }
 });
 
 // POST endpoint to add a movie to the watchlist
 app.post('/watchlist', async (req, res) => {
     try {
-        await client.connect();
         const colli = client.db('expertlab').collection('watchlist');
 
         let newMovie = {
@@ -72,9 +75,41 @@ app.post('/watchlist', async (req, res) => {
             error: 'Something went wrong',
             value: error
         });
-    } finally {
-        await client.close();
     }
+});
+
+// DELETE endpoint to remove a movie from the watchlist by movie_id
+app.delete('/watchlist/:movie_id', async (req, res) => {
+    try {
+        const colli = client.db('expertlab').collection('watchlist');
+
+        const movieId = parseInt(req.params.movie_id);;
+    
+        const query = { movie_id: movieId };
+        
+        const result = await colli.deleteOne(query);
+
+        if (result.deletedCount > 0){
+            res.status(200).send('Deleted movie with id: ' + movieId);
+            return;
+        }else{
+            res.status(400).send('Could not find movie with id: ' + movieId);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            error: 'Something went wrong',
+            value: error
+        });
+    }
+});
+
+process.on('SIGINT', () => {
+client.close()
+    .then(() => {
+    console.log('MongoDB connection closed');
+    process.exit(0);
+    });
 });
 
 app.listen(port, () => {

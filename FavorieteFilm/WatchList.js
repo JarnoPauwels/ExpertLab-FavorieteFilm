@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
 const Watchlist = () => {
@@ -12,10 +12,19 @@ const Watchlist = () => {
       const response = await axios.get(apiUrl);
 
       const watchlistData = response.data;
-
       setWatchlist(watchlistData);
+      console.log(watchlistData)
     } catch (error) {
       console.error('Error fetching watchlist data:', error);
+    }
+  };
+
+  const deleteMovie = async (movie) => {
+    try {
+      await axios.delete(`http://localhost:3000/watchlist/${movie.movie_id}`);
+      fetchWatchlistData(); // Refresh the watchlist after deleting
+    } catch (error) {
+      console.error('Error deleting movie:', error);
     }
   };
 
@@ -39,6 +48,10 @@ const Watchlist = () => {
             style={styles.poster}
             />
             <Text style={styles.movieDescription}>{item.description}</Text>
+            <TouchableOpacity onPress={() => deleteMovie(item)}>
+              {/* <FontAwesomeIcon icon={faPlus} style={styles.movieText}/> */}
+              <Text style={styles.movieText}>Delete</Text>
+          </TouchableOpacity>
           </View>
         )}
       />
