@@ -5,13 +5,13 @@ import { faList } from '@fortawesome/free-solid-svg-icons/faList'
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { useNavigation } from '@react-navigation/native';
 
-const Menu = ({ isVisible, onClose, onGoToWatchlist, onGoToWatched}) => {
+const Menu = ({ isVisible, onClose}) => {
   if (!isVisible) {
     return null; 
   }
   const navigation = useNavigation();
   const navigateToWatchlist = () => {
-    navigation.navigate('WatchList');
+    navigation.navigate('Watchlist');
     onClose();
   };
 
@@ -25,7 +25,7 @@ const Menu = ({ isVisible, onClose, onGoToWatchlist, onGoToWatched}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.menuItemContainer}>
-        <TouchableOpacity onPress={onGoToWatched} style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}>
           <Text style={styles.menuText}>Profile</Text>
           <FontAwesomeIcon icon={faUser} style={styles.menuText}/>
         </TouchableOpacity>
@@ -38,14 +38,14 @@ const Menu = ({ isVisible, onClose, onGoToWatchlist, onGoToWatched}) => {
 const styles = StyleSheet.create({
   menu: {
     position: 'absolute',
-    top: 115, // Adjust the top position as needed
-    left: 0, // Adjust the right position as needed
-    width: '100%', // Adjust the width as needed
-    height: '100%', // Adjust the width as needed
-    backgroundColor: 'rgba(0, 3, 20, 8)',
+    top: 115, 
+    left: 0, 
+    width: '100%', 
+    height: '100%',
+    backgroundColor: 'rgb(28, 33, 39)',
     borderRadius: 10,
     padding: 10,
-    zIndex: 1, // Ensure the menu is above other content
+    zIndex: 1,
   },
   menuContainer: {
     marginTop: 30,
