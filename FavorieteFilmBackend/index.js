@@ -83,7 +83,7 @@ app.delete('/watchlist/:movie_id', async (req, res) => {
     try {
         const colli = client.db('expertlab').collection('watchlist');
 
-        const movieId = parseInt(req.params.movie_id);;
+        const movieId = parseInt(req.params.movie_id);
     
         const query = { movie_id: movieId };
         
@@ -104,6 +104,32 @@ app.delete('/watchlist/:movie_id', async (req, res) => {
     }
 });
 
+// PUT endpoint to update the 'watched' status of a movie
+app.put('/watchlist/:movie_id', async (req, res) => {
+    try {
+      const colli = client.db('expertlab').collection('watchlist');
+  
+      const movieId = parseInt(req.params.movie_id); 
+  
+      const query = { movie_id: movieId };
+      const update = { $set: { watched: true } };
+  
+      const result = await colli.updateOne(query, update);
+  
+      if (result.modifiedCount > 0) {
+        res.status(200).send('Movie watched status updated successfully');
+      } else {
+        res.status(400).send('Could not update movie watched status');
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        error: 'Something went wrong',
+        value: error
+      });
+    }
+  });
+  
 process.on('SIGINT', () => {
 client.close()
     .then(() => {
