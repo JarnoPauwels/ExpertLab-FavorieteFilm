@@ -6,7 +6,7 @@ import axios from 'axios';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import MovieList from './MovieList';
-import WatchList from './WatchList';
+import Watchlist from './Watchlist';
 import Menu from './Menu';
 import MovieDetails from './MovieDetails';
 import Icon from 'react-native-vector-icons/Ionicons'; 
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingTop: 50,
     marginTop: 0,
-    backgroundColor: 'rgba(0, 3, 20, 8)',
+    backgroundColor: 'rgb(28, 33, 39)',
+    // backgroundColor: 'rgba(0, 3, 20, 8)',
   },
   header: {
     flexDirection: 'row',
@@ -160,12 +161,13 @@ const styles = StyleSheet.create({
 
 export default () => {
   return (
-    <NavigationContainer theme={{ colors: { background: 'rgba(0, 3, 20, 8)' } }}>
+    <NavigationContainer theme={{ colors: { background: 'rgb(28, 33, 39)' } }}>
       <Stack.Navigator 
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
-            backgroundColor: 'rgba(0, 3, 20, 8)', 
+            // backgroundColor: 'rgba(0, 3, 20, 8)', 
+            backgroundColor: 'rgb(28, 33, 39)', 
             borderBottomColor: 'rgba(20, 20, 20, 3)',
             borderBottomWidth: 2,
             // position: 'absolute',
@@ -181,7 +183,7 @@ export default () => {
         >
         <Stack.Screen name="Home" component={App} options={{ headerShown: false, ...TransitionPresets.FadeFromBottomAndroid }}/>
         <Stack.Screen name="MovieDetails" component={MovieDetails} options={{ ...TransitionPresets.FadeFromBottomAndroid }}/>
-        <Stack.Screen name="WatchList" component={WatchList} options={{ ...TransitionPresets.FadeFromBottomAndroid }}/>
+        <Stack.Screen name="Watchlist" component={Watchlist} options={{ ...TransitionPresets.FadeFromBottomAndroid }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
