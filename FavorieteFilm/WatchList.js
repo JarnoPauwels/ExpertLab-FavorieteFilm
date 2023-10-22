@@ -68,7 +68,7 @@ const rateMovie = async (movie, newScore) => {
           keyExtractor={(item) => item.movie_id.toString()}
           renderItem={({ item }) => (
             <View style={styles.movieContainer}>
-              <MovieRating score={item.score} onRateMovie={(newScore) => rateMovie(item, newScore)} iconSize="36"/>
+              <MovieRating score={item.score} onRateMovie={(newScore) => rateMovie(item, newScore)} iconSize="20"/>
               <View style={styles.titleContainer}>
                 <Text style={styles.movieText}>{item.title}</Text>
                 {item.watched ? (
