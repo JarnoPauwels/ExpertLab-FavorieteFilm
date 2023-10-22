@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEye, faEyeSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
+import MovieRating from './MovieRating';
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -39,6 +40,20 @@ const Watchlist = () => {
     }
   };
 
+const rateMovie = async (movie, newScore) => {
+  try {
+    const response = await axios.put(`http://localhost:3000/watchlist/${movie.movie_id}/rate`, { score: newScore });
+
+    if (response.status === 200) {
+      fetchWatchlistData(); // Refresh the watchlist after updating the rating.
+    } else {
+      console.error('Movie rating failed:', response.data);
+    }
+  } catch (error) {
+    console.error('Error rating movie:', error);
+  }
+};
+
   useEffect(() => {
     fetchWatchlistData();
   }, []);
@@ -53,6 +68,7 @@ const Watchlist = () => {
           keyExtractor={(item) => item.movie_id.toString()}
           renderItem={({ item }) => (
             <View style={styles.movieContainer}>
+              <MovieRating score={item.score} onRateMovie={(newScore) => rateMovie(item, newScore)} iconSize="36"/>
               <View style={styles.titleContainer}>
                 <Text style={styles.movieText}>{item.title}</Text>
                 {item.watched ? (
