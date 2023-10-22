@@ -8,7 +8,6 @@ import axios from 'axios';
 
 const MovieDetails = ({ route, navigation }) => {
   const { movie } = route.params;
-  const [isCheckVisible, setIsCheckVisible] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
   useLayoutEffect(() => {
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
   },
   addContainer: {
     flexDirection: 'row',
-    // alignItems: 'flex-end',
     alignItems: 'center',
     paddingBottom: 10,
   },

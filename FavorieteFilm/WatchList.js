@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 16,
     marginBottom: 8,
-
   },
   button: {
     flexDirection: 'row',

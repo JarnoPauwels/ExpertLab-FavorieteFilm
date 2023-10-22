@@ -6,7 +6,7 @@ import axios from 'axios';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import MovieList from './MovieList';
-import Watchlist from './Watchlist';
+import Watchlist from './WatchList';
 import Menu from './Menu';
 import MovieDetails from './MovieDetails';
 import Icon from 'react-native-vector-icons/Ionicons'; 
@@ -80,6 +80,7 @@ const App = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Navigate to Movie Details page
   const goToMovieDetails = (movie) => {
     navigation.navigate('MovieDetails', { movie });
   };
@@ -89,7 +90,6 @@ const App = () => {
       <View style={styles.header}>
         <View style={{ flex: 1}}>
           <SearchBar
-            // style={styles.shadow}
             placeholder="Search for movies..."
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     marginTop: 0,
     backgroundColor: 'rgb(28, 33, 39)',
-    // backgroundColor: 'rgba(0, 3, 20, 8)',
   },
   header: {
     flexDirection: 'row',
@@ -166,14 +165,9 @@ export default () => {
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
-            // backgroundColor: 'rgba(0, 3, 20, 8)', 
             backgroundColor: 'rgb(28, 33, 39)', 
             borderBottomColor: 'rgba(20, 20, 20, 3)',
             borderBottomWidth: 2,
-            // position: 'absolute',
-            // top: Dimensions.get('window').height - 60,
-            // left: 0,
-            // right: 0,
           },
           headerTintColor: 'white', 
           headerTitleStyle: {
