@@ -1,7 +1,6 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
 import axios from 'axios';

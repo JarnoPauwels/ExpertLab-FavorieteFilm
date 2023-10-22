@@ -33,3 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Ignore environment configuration files with sensitive data (e.g., .env)
+.env
