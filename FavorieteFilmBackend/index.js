@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { MongoClient, ObjectID} = require('mongodb');
+const { MongoClient } = require('mongodb');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
@@ -48,6 +48,7 @@ app.post('/watchlist', async (req, res) => {
             description: req.body.description,
             poster: req.body.poster,
             watched: false,
+            score: 0,
         }
 
         const query = { movie_id: newMovie.movie_id}
@@ -128,8 +129,28 @@ app.put('/watchlist/:movie_id', async (req, res) => {
         value: error
       });
     }
-  });
-  
+});
+
+app.put('/watchlist/:movie_id/rate', async (req, res) => {
+  try {
+    const movie_id = parseInt(req.params.movie_id, 10); // Convert the string to an integer
+    const { score } = req.body;
+
+    // Update the movie's score in the database.
+    const colli = client.db('expertlab').collection('watchlist');
+    const result = await colli.updateOne({ movie_id }, { $set: { score } });
+
+    if (result.modifiedCount === 1) {
+      res.status(200).json({ message: 'Movie rated successfully' });
+    } else {
+      res.status(404).json({ error: 'Movie not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong', value: error });
+  }
+});
+
 process.on('SIGINT', () => {
 client.close()
     .then(() => {
